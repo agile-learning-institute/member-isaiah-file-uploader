@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head><title>Your Folders</title></head>
+  <body>
+    <h1>Welcome, <%= user.username %></h1>
+    <a href="/folders/new">+ New Folder</a>
+    <ul>
+      <% folders.forEach(folder => { %>
+        <li>
+          <a href="/folders/<%= folder.id %>"><%= folder.name %></a>
+          (<%= folder.files.length %> files)
+          <form action="/folders/<%= folder.id %>/delete" method="POST" style="display:inline;">
+            <button>Delete</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+    <a href="/logout">Logout</a>
+  </body>
+</html>
