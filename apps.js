@@ -24,13 +24,16 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(session({
   cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: false,
-  store: new PrismaStore({
+  store: new PrismaStore(
     prisma,
-    checkPeriod: 2 * 60 * 1000
-  })
+    {
+      checkPeriod: 2 * 60 * 1000,
+      dbRecordIdIsSessionId: false
+    }
+  )
 }));
 
 app.use(passport.initialize());
