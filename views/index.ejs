@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Uploader - Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .welcome { font-size: 24px; color: #333; }
+        .nav { display: flex; gap: 15px; }
+        .btn { padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stat-number { font-size: 32px; font-weight: bold; color: #007bff; }
+        .stat-label { color: #666; margin-top: 5px; }
+        .recent-files { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .file-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .file-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="welcome">Welcome, <%= user.username %>!</div>
+            <div class="nav">
+                <a href="/folders" class="btn btn-primary">My Folders</a>
+                <a href="/folders/new" class="btn btn-secondary">New Folder</a>
+                <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.folderCount %></div>
+                <div class="stat-label">Folders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.fileCount %></div>
+                <div class="stat-label">Files</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><%= stats.totalSize %></div>
+                <div class="stat-label">Total Size (MB)</div>
+            </div>
+        </div>
+
+        <div class="recent-files">
+            <h3>Recent Files</h3>
+            <% if (recentFiles.length === 0) { %>
+                <p>No files uploaded yet. <a href="/folders">Create a folder</a> to get started!</p>
+            <% } else { %>
+                <% recentFiles.forEach(file => { %>
+                    <div class="file-item">
+                        <div>
+                            <strong><%= file.name %></strong>
+                            <small>(<%= (file.size / 1024 / 1024).toFixed(2) %> MB)</small>
+                        </div>
+                        <div>
+                            <a href="/files/<%= file.id %>" class="btn btn-secondary">View</a>
+                            <a href="/files/download/<%= file.id %>" class="btn btn-primary">Download</a>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html> 

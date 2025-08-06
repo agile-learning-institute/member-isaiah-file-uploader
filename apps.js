@@ -41,9 +41,36 @@ app.use('/files', fileRoutes);
 app.use('/folders', folderRoutes);
 app.use('/share', shareRoutes);
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   if (!req.isAuthenticated()) return res.redirect('/login');
-  res.render('index', { user: req.user });
+  
+  try {
+    // Get user stats
+    const [folderCount, fileCount, totalSize, recentFiles] = await Promise.all([
+      prisma.folder.count({ where: { userId: req.user.id } }),
+      prisma.file.count({ where: { userId: req.user.id } }),
+      prisma.file.aggregate({
+        where: { userId: req.user.id },
+        _sum: { size: true }
+      }),
+      prisma.file.findMany({
+        where: { userId: req.user.id },
+        orderBy: { uploadTime: 'desc' },
+        take: 5
+      })
+    ]);
+
+    const stats = {
+      folderCount,
+      fileCount,
+      totalSize: totalSize._sum.size ? (totalSize._sum.size / 1024 / 1024).toFixed(2) : '0'
+    };
+
+    res.render('index', { user: req.user, stats, recentFiles });
+  } catch (error) {
+    console.error('Error loading dashboard:', error);
+    res.render('index', { user: req.user, stats: { folderCount: 0, fileCount: 0, totalSize: '0' }, recentFiles: [] });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
