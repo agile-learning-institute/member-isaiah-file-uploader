@@ -10,9 +10,10 @@
         .file-details { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .file-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .file-name { font-size: 24px; font-weight: bold; }
-        .btn { padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; }
+        .btn { padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; border: none; cursor: pointer; }
         .btn-primary { background: #007bff; color: white; }
         .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
         .file-info { margin-bottom: 30px; }
         .info-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; }
         .info-row:last-child { border-bottom: none; }
@@ -29,6 +30,9 @@
                 <div class="actions">
                     <a href="/files/download/<%= file.id %>" class="btn btn-primary">Download</a>
                     <a href="/folders/<%= file.folderId || 'root' %>" class="btn btn-secondary">Back to Folder</a>
+                    <form action="/files/delete/<%= file.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this file?')">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
                 </div>
             </div>
 

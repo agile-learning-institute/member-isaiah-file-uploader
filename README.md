@@ -30,7 +30,7 @@ A stripped-down personal storage application similar to Google Drive — built w
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/drive-app.git
+git clone https://github.com/agile-learning-institute/member-isaiah-file-uploader
 cd drive-app
 npm install
 ```

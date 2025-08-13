@@ -4,6 +4,7 @@ const session = require('express-session');
 const PrismaStore = require('@quixo3/prisma-session-store').PrismaSessionStore;
 const passport = require('passport');
 const path = require('path');
+const multer = require('multer');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -43,6 +44,20 @@ app.use('/', authRoutes);
 app.use('/files', fileRoutes);
 app.use('/folders', folderRoutes);
 app.use('/share', shareRoutes);
+
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('Error:', error);
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'File too large. Maximum size is 10MB.' });
+    }
+    if (error.code === 'LIMIT_FILE_COUNT') {
+      return res.status(400).json({ error: 'Too many files. Only one file allowed.' });
+    }
+  }
+  res.status(500).json({ error: 'Something went wrong!' });
+});
 
 app.get('/', async (req, res) => {
   if (!req.isAuthenticated()) return res.redirect('/login');
