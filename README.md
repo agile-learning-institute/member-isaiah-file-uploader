@@ -31,7 +31,7 @@ A stripped-down personal storage application similar to Google Drive — built w
 
 ```bash
 git clone https://github.com/agile-learning-institute/member-isaiah-file-uploader
-cd drive-app
+cd member-isaiah-file-uploader
 npm install
 ```
 Create a .env file in the root with:
